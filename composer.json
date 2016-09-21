@@ -1,0 +1,15 @@
+{
+    "name": "georgi-aleksandrov/the-game",
+    "description": "battleships- console/web game",
+    "authors": [
+        {
+            "name": "Georgi Aleksandrov",
+            "email": "georgi.alexandroff@yahoo.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
