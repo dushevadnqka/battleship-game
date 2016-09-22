@@ -11,6 +11,7 @@ class ConsoleCacheRepository implements Cache
      * @var
      */
     protected static $storage;
+    protected static $shoots;
 
     public function create(array $param)
     {
@@ -89,6 +90,6 @@ class ConsoleCacheRepository implements Cache
 
     public function counter()
     {
-        return count(static::$storage['result'], COUNT_RECURSIVE) - 1;
+        return static::$shoots ++;
     }
 }

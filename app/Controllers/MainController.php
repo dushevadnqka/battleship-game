@@ -20,6 +20,10 @@ class MainController
 
     public function index()
     {
+        if(array_key_exists('ending_message', $_SESSION)){
+            unset ($_SESSION['ending_message']);
+        }
+
         return $this->view->setView(
             'web-draw',
             [
@@ -34,12 +38,15 @@ class MainController
          * @todo invalidate method
          */
         unset($_SESSION['result']);
-        
+
         if (isset($_POST) && array_key_exists('coordinates', $_POST)) {
             if ($_POST['coordinates'] == 'show') {
                 $flash_message = 'Show';
                 $result        = $this->model->getFleet();
             } elseif ($this->model->validation($_POST['coordinates']) == true) {
+
+                $count = $this->model->getCountShoots();
+
                 $result = $this->model->strike(ucfirst($_POST['coordinates']));
 
                 $flash_message = 'Miss';
@@ -61,10 +68,8 @@ class MainController
              * 2. count shoots
              * 3. set $_SESSION['finish_message']
              */
-            if ($this->model->checkGameStatus()== true) {
-                $count = $this->model->getCountShoots();
-
-                $_SESSION['finish_message'] = "You finished the game with <b>$count</b>.";
+            if ($this->model->checkGameStatus($result)== true) {
+                $_SESSION['ending_message'] = "You finished the game with <b>$count</b> shoots.";
             }
 
             /*

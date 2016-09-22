@@ -84,6 +84,6 @@ class WebCacheRepository implements Cache
 
     public function counter()
     {
-        return count($_SESSION['result'], COUNT_RECURSIVE) -1;
+        return $_SESSION['shoots']++;
     }
 }

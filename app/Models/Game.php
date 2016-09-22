@@ -10,7 +10,6 @@ class Game
     public $repository;
     protected static $table;
     protected static $fleet;
-    protected static $boat;
 
     public function __construct(Repository $repository, $config)
     {
@@ -79,6 +78,8 @@ class Game
         } else {
             $this->makeVertical($length);
         }
+
+        //return $ship;
     }
 
     /**
@@ -102,6 +103,9 @@ class Game
             $affected[]               = $i;
         }
 
+        /*
+         * array_diff with ready ships
+         */
         if (array_sum($chunk) === 0) {
             foreach ($affected as $v) {
                 static::$fleet[$letterRandom][$v] = 1;
@@ -111,7 +115,6 @@ class Game
 
     /**
      * @todo config
-     * @todo th whole method- overlapping boats
      */
     public function makeVertical($length)
     {

@@ -1,5 +1,4 @@
 <?php
-
 fwrite(STDOUT, "\n");
 
 $filled = '';
@@ -17,7 +16,9 @@ do {
         fwrite(STDOUT, "\n*** ".$triger['message']." ***\n");
     }
 
-    $filled = $triger['result'];
+    if (array_key_exists('result', $triger)) {
+        $filled = $triger['result'];
+    }
 
     require 'partials/grid.php';
 } while ($selection != 'quit');

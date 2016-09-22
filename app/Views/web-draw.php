@@ -40,8 +40,8 @@
         }
         echo '</pre>';
 
-        if (array_key_exists('finish_message', $_SESSION)) {
-            echo $_SESSION['flash_message'];
+        if (array_key_exists('ending_message', $_SESSION)) {
+            echo $_SESSION['ending_message'];
         }
         ?>
 

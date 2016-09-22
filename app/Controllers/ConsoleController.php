@@ -10,6 +10,8 @@ class ConsoleController
 
     public function process($param)
     {
+        $endingMessage = null;
+
         $repository = new Cache();
         $model = new Play($repository);
 
@@ -22,6 +24,8 @@ class ConsoleController
             return ['message' => 'error'];
         }
 
+        $count = $model->getCountShoots();
+
         $result = $model->strike(ucfirst($param));
 
         $message = 'Miss';
@@ -33,9 +37,14 @@ class ConsoleController
             $message = 'Hit';
         }
 
+        if($model->checkGameStatus($result) === true){
+            $endingMessage = "You finished the game with <b>$count</b> shoots.";
+        }
+
         return [
             'message' => $message,
-            'result' => $result
+            'result' => $result,
+            'endingMessage' => $endingMessage
         ];
     }
 }

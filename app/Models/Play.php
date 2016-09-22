@@ -83,14 +83,14 @@ class Play
         return $this->repository->register($open);
     }
 
-    public function checkGameStatus()
+    public function checkGameStatus($open)
     {
-        $targets = count($this->getFleet(), COUNT_RECURSIVE) -1;
+        $check = array_intersect_key($open, $this->getFleet());
 
         /**
          * @todo config
          */
-        if ((int)$targets === 13) {
+        if (count($check) === 3 && count($check) === count($this->getFleet())) {
             return true;
         }
 
