@@ -72,15 +72,13 @@ class Game
      */
     public function createShip($length)
     {
-        $choice = rand(1, 2);
+        $choice = 1;//rand(1, 2);
 
         if ($choice === 1) {
             $this->makeHorizontal($length);
         } else {
             $this->makeVertical($length);
         }
-
-        //return $ship;
     }
 
     /**
@@ -104,9 +102,6 @@ class Game
             $affected[]               = $i;
         }
 
-        /*
-         * array_diff with ready ships
-         */
         if (array_sum($chunk) === 0) {
             foreach ($affected as $v) {
                 static::$fleet[$letterRandom][$v] = 1;
@@ -116,6 +111,7 @@ class Game
 
     /**
      * @todo config
+     * @todo th whole method- overlapping boats
      */
     public function makeVertical($length)
     {
@@ -138,9 +134,6 @@ class Game
 
         if (array_sum($chunk) === 0) {
             foreach ($chunk as $k => $v) {
-                print_r(key($v));
-                echo "\n\n";
-                die();
                 static::$fleet[$k][key($v)] = 1;
             }
         }

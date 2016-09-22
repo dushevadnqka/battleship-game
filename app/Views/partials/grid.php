@@ -1,7 +1,7 @@
 <?php
 
 fwrite(STDOUT, " ");
-for ($x = 1; $x <= 10; $x++) {
+for ($x = 1; $x <= count(array_keys($table)); $x++) {
     fwrite(STDOUT, "  $x");
 }
 
@@ -10,7 +10,7 @@ fwrite(STDOUT, "\n");
 foreach ($table as $k => $v) {
     fwrite(STDOUT, "$k ");
 
-    for ($x = 1; $x <= 10; $x++) {
+    for ($x = 1; $x <= count(array_keys($table)); $x++) {
         if ($filled && is_array($filled) && array_key_exists($k, $filled) && array_key_exists($x, $filled[$k])) {
             if ($filled[$k][$x] == 0) {
                 fwrite(STDOUT, " _ ");

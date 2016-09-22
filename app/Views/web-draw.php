@@ -14,7 +14,8 @@
             echo "*** ".$_SESSION['flash_message']." ***\n\n";
         }
         echo " ";
-        for ($x = 1; $x <= 10; $x++) {
+
+        for ($x = 1; $x <= count(array_keys($table)); $x++) {
             echo " $x ";
         }
 
@@ -23,7 +24,7 @@
         foreach ($table as $k => $v) {
             echo $k;
 
-            for ($x = 1; $x <= 10; $x++) {
+            for ($x = 1; $x <= count(array_keys($table)); $x++) {
                 if ($filled && is_array($filled) && array_key_exists($k, $filled)
                     && array_key_exists($x, $filled[$k])) {
                     if ($filled[$k][$x] == 0) {
@@ -43,11 +44,11 @@
             echo $_SESSION['flash_message'];
         }
         ?>
-        
+
         <form method="POST" action="main/shoot">
             <p>Enter coordinates (row, col), e.g. A5 <input type='text' name='coordinates' size='5' autocomplete='off'> <input type='submit' value='Submit Query'></p>
         </form>
-       
+
     </body>
 </html>
 
