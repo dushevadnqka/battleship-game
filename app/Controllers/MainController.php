@@ -14,19 +14,15 @@ class MainController
     public function __construct()
     {
         $this->view  = new View();
-        $repository =  new Cache();
+        $repository  = new Cache();
         $this->model = new Play($repository);
     }
 
     public function index()
     {
-        if(array_key_exists('ending_message', $_SESSION)){
-            unset ($_SESSION['ending_message']);
-        }
-
         return $this->view->setView(
-            'web-draw',
-            [
+                'web-draw',
+                [
                 'table' => $this->model->getTable()
                 ]
         );
@@ -68,9 +64,14 @@ class MainController
              * 2. count shoots
              * 3. set $_SESSION['finish_message']
              */
-            if ($this->model->checkGameStatus($result)== true) {
-                $_SESSION['ending_message'] = "You finished the game with <b>$count</b> shoots.";
-            }
+            /*
+              if ($this->model->checkGameStatus($result)== true) {
+              $_SESSION['ending_message'] = "You finished the game with <b>$count</b> shoots.";
+              }
+             *
+             */
+
+            $_SESSION['dump_compare_shoots_left'] = $this->model->checkGameStatus($result);
 
             /*
              * invalidate cache
