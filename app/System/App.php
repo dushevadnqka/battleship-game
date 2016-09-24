@@ -6,15 +6,14 @@ use App\Models\Game;
 
 class App
 {
-    private static $instance = null;
     private $config;
 
-    private function __construct($config)
+    public function __construct($config)
     {
         $this->config = $config;
     }
 
-    public function run()
+    public function runWebEdition()
     {
         session_start();
         $repository = new \App\Repositories\Web\WebCacheRepository();
@@ -28,7 +27,7 @@ class App
         }
         
         try {
-            $controller = FrontController::getInstance($this->config);
+            $controller = new WebFrontController($this->config);
             $controller->fire();
         } catch (\Exception $e) {
             echo $e->getMessage();
@@ -43,7 +42,7 @@ class App
 
         try {
             $play = new \App\Models\Play($repository);
-            $controller = new ConsoleFrontController($play); //don't need singleton
+            $controller = new ConsoleFrontController($play);
             $controller->start();
         } catch (\Exception $e) {
             echo $e->getMessage();
@@ -59,17 +58,5 @@ class App
         } catch (\Exception $ex) {
             echo $ex->getMessage();
         }
-    }
-
-    /**
-     *
-     * @return App
-     */
-    public static function getInstance($config)
-    {
-        if (self::$instance == null) {
-            self::$instance = new App($config);
-        }
-        return self::$instance;
     }
 }

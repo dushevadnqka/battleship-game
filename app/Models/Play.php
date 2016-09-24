@@ -86,15 +86,23 @@ class Play
     public function checkGameStatus($open)
     {
         $check = array_intersect_key($open, $this->getFleet());
+//return $check;
+
+        //$diff = array_diff($this->getFleet(), $open);
+
+       return $open;
 
         /**
          * @todo config
          */
+        /*
         if (count($check) === 3 && count($check) === count($this->getFleet())) {
             return true;
         }
 
         return false;
+         * 
+         */
     }
 
     public function getCountShoots()

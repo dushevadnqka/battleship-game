@@ -17,6 +17,6 @@ if ($configInstance->getConfigFolder() == null) {
     }
 }
 
-$app = \App\System\App::getInstance($configInstance);
+$app = new App\System\App($configInstance);
 
 return $app;

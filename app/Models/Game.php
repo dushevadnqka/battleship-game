@@ -19,10 +19,8 @@ class Game
 
     public function createTable()
     {
-        $data = [];
-
         /**
-         * @config
+         * config
          * default: 10
          */
         $length = 10;
@@ -45,19 +43,21 @@ class Game
         /*
          * defaults
          */
+        $numberOfShips = 3;
         $battleShipLength = 5;
         $destroyerLength  = 4;
 
         /**
-         * @config
+         * config
          */
         if (isset($this->config)) {
             $battleShipLength = $this->config['battleship_length'];
             $destroyerLength  = $this->config['destroyer_length'];
+            $numberOfShips = $this->config['number_of_ships'];
         }
 
-        for ($i = 0; $i <= 2; $i++) {
-            if ($i == 1) {
+        for ($i = 1; $i <= $numberOfShips; $i++) {
+            if ($i == 2) {
                 $this->createShip($battleShipLength);
             } else {
                 $this->createShip($destroyerLength);
@@ -78,8 +78,6 @@ class Game
         } else {
             $this->makeVertical($length);
         }
-
-        //return $ship;
     }
 
     /**
@@ -92,8 +90,12 @@ class Game
 
         $letterRandom = array_rand(static::$table, 1);
         $row          = static::$table[$letterRandom];
-        (int) $firstRandom  = rand(1, 10 - intval($length - 1));
-        (int) $lastInRange  = $firstRandom + intval($length - 1);
+
+        /**
+         * @todo 10 is hardcoded!
+         */
+        $firstRandom  = rand(1, $this->config['side_length'] - $length - 1);
+        $lastInRange  = $firstRandom + $length - 1;
 
         /*
          * it is very important to check whlole chunk values simultaneously it could be array_slice
@@ -122,11 +124,9 @@ class Game
 
         $letters = array_keys(static::$table);
 
-        (int) $firstLetterIndex  = rand(0, 9 - intval($length - 1));
-        (int) $randRowPoint      = rand(1, 10);
-        (int) $lastLetterInRange = $firstLetterIndex + intval($length - 1);
-
-        $letter = $letters[$firstLetterIndex];
+        $firstLetterIndex  = rand(0, $this->config['side_length'] -1 - $length - 1);
+        $randRowPoint      = rand(1, $this->config['side_length']);
+        $lastLetterInRange = $firstLetterIndex + $length - 1;
 
         /*
          * it is very important to check whlole chunk values simultaneously it could be array_slice

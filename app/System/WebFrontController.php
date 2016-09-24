@@ -2,15 +2,14 @@
 
 namespace App\System;
 
-final class FrontController
+final class WebFrontController
 {
-    private static $instance = null;
     private $basePath;
     private $controller;
     private $action          = 'index';
     private $params          = [];
 
-    private function __construct($config)
+    public function __construct($config)
     {
         $this->basePath   = $config->routes['domain'];
         $this->controller = $config->routes['default_controller'];
@@ -95,17 +94,5 @@ final class FrontController
             [new $this->controller, $this->action],
             $this->params
         );
-    }
-
-    /**
-     *
-     * @return Core\FrontController
-     */
-    public static function getInstance($config)
-    {
-        if (self::$instance == null) {
-            self::$instance = new FrontController($config);
-        }
-        return self::$instance;
     }
 }

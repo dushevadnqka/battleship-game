@@ -10,7 +10,11 @@ do {
         $selection = readline("Coordinates: ");
     } while (trim($selection) == '');
 
-    $triger = \App\Controllers\ConsoleController::process($selection);
+    //$triger = \App\Controllers\ConsoleController::process($selection);
+
+    $action = new \App\Controllers\ConsoleController();
+    
+    $triger = $action->process($selection);
 
     if (array_key_exists('message', $triger)) {
         fwrite(STDOUT, "\n*** ".$triger['message']." ***\n");
