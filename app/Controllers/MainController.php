@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Play;
 use App\System\View;
-use App\Repositories\Web\WebCacheRepository as Cache;
+use App\Repositories\Web\WebCacheRepository as Repository;
 
 class MainController
 {
@@ -14,7 +14,7 @@ class MainController
     public function __construct()
     {
         $this->view  = new View();
-        $repository  = new Cache();
+        $repository  = new Repository();
         $this->model = new Play($repository);
     }
 
@@ -30,56 +30,68 @@ class MainController
 
     public function shoot()
     {
-        /**
-         * @todo invalidate method
-         */
         unset($_SESSION['result']);
 
+        $flash_message = 'Error';
+        $location      = '/';
+
         if (isset($_POST) && array_key_exists('coordinates', $_POST)) {
-            if ($_POST['coordinates'] == 'show') {
-                $flash_message = 'Show';
-                $result        = $this->model->getFleet();
-            } elseif ($this->model->validation($_POST['coordinates']) == true) {
 
-                $count = $this->model->getCountShoots();
+            $input = ucfirst($_POST['coordinates']);
 
-                $result = $this->model->strike(ucfirst($_POST['coordinates']));
+            if ($input == 'Show') {
 
-                $flash_message = 'Miss';
+                $flash_message = "Show";
 
-                if (strlen($_POST['coordinates']) === 2 && $result[ucfirst($_POST['coordinates'])[0]][$_POST['coordinates'][1]]
-                    == 1) {
-                    $flash_message = 'Hit';
-                } elseif (strlen($_POST['coordinates']) === 3 && $result[ucfirst($_POST['coordinates'])[0]][$_POST['coordinates'][1].$_POST['coordinates'][2]]
-                    == 1) {
-                    $flash_message = 'Hit';
+                $result['data'] = [];
+
+                foreach ($this->model->getFleet() as $v) {
+                    $result['data'] = array_merge($result['data'], $v);
                 }
-            } else {
-                $flash_message = 'Error';
+            } elseif ($this->model->validation($input) === true) {
+
+                $result = $this->model->strike($input);
+
+                /**
+                 * after status "End".. game over
+                 */
+                if ($result['status'] === "End") {
+                    $location = "ending";
+                }
+
+                $flash_message = $result['status'];
             }
-
-            /**
-             * finishes the game:
-             * 1. count count of all targets
-             * 2. count shoots
-             * 3. set $_SESSION['finish_message']
-             */
-            /*
-              if ($this->model->checkGameStatus($result)== true) {
-              $_SESSION['ending_message'] = "You finished the game with <b>$count</b> shoots.";
-              }
-             *
-             */
-
-            $_SESSION['dump_compare_shoots_left'] = $this->model->checkGameStatus($result);
-
-            /*
-             * invalidate cache
-             * and than catch new one
-             */
-            $_SESSION['flash_message'] = $flash_message;
-            $_SESSION['result']        = $result;
-            header("Location:/");
         }
+
+        $_SESSION['flash_message'] = $flash_message;
+        $_SESSION['result']        = $result['data'];
+
+        header("Location:$location");
+    }
+
+    public function ending()
+    {
+        if (isset($_SESSION) && array_key_exists('fleet', $_SESSION) && empty($_SESSION['fleet'])) {
+            return $this->view->setView(
+                    'web-ending',
+                    [
+                    'count' => $this->model->getCountShoots()
+                    ]
+            );
+        }
+        header("Location:/");
+    }
+
+    public function regame()
+    {
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            $uri = (explode('/',
+                    str_replace('http://', '', $_SERVER['HTTP_REFERER'])));
+
+            if (end($uri) === "ending") {
+                session_destroy();
+            }
+        }
+        header("Location:/");
     }
 }

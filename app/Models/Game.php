@@ -32,7 +32,7 @@ class Game
         foreach (range('A', 'Z') as $k => $v) {
             if ($k + 1 <= $length) {
                 for ($x = 1; $x <= $length; $x++) {
-                    static::$table[$v][$x] = 0;
+                    static::$table[$v][$v.$x] = 0;
                 }
             }
         }
@@ -43,7 +43,7 @@ class Game
         /*
          * defaults
          */
-        $numberOfShips = 3;
+        $numberOfShips    = 3;
         $battleShipLength = 5;
         $destroyerLength  = 4;
 
@@ -53,93 +53,71 @@ class Game
         if (isset($this->config)) {
             $battleShipLength = $this->config['battleship_length'];
             $destroyerLength  = $this->config['destroyer_length'];
-            $numberOfShips = $this->config['number_of_ships'];
+            $numberOfShips    = $this->config['number_of_ships'];
         }
 
         for ($i = 1; $i <= $numberOfShips; $i++) {
             if ($i == 2) {
-                $this->createShip($battleShipLength);
+                static::$fleet[$i] = $this->createShip($battleShipLength);
             } else {
-                $this->createShip($destroyerLength);
+                static::$fleet[$i] = $this->createShip($destroyerLength);
             }
         }
     }
 
     /**
-     * 1 horizontal A[1], A[2], A[3], A[4]
+     * 1 horizontal [A[1], A[2], A[3], A[4]]
      * 2 vertical A[1], B[1], C[1], D[1]
      */
     public function createShip($length)
     {
-        $choice = 1;//rand(1, 2);
+        $choice = rand(1, 2);
 
         if ($choice === 1) {
-            $this->makeHorizontal($length);
+            return $this->makeHorizontal($length);
         } else {
-            $this->makeVertical($length);
+            return $this->makeVertical($length);
         }
     }
 
-    /**
-     * @todo config
-     */
     public function makeHorizontal($length)
     {
-        $chunk    = [];
-        $affected = [];
+        $ship = [];
 
         $letterRandom = array_rand(static::$table, 1);
         $row          = static::$table[$letterRandom];
 
-        /**
-         * @todo 10 is hardcoded!
-         */
-        $firstRandom  = rand(1, $this->config['side_length'] - $length - 1);
-        $lastInRange  = $firstRandom + $length - 1;
+        $firstRandom = rand(1, $this->config['side_length'] - $length - 1);
+        $lastInRange = $firstRandom + $length - 1;
 
-        /*
-         * it is very important to check whlole chunk values simultaneously it could be array_slice
+        /**
+         * @todo check is available!!!!
          */
         for ($i = $firstRandom; $i <= $lastInRange; $i++) {
-            $chunk[$letterRandom][$i] = $row[$i];
-            $affected[]               = $i;
+            $ship[$letterRandom.$i] = 1;
         }
 
-        /*
-         * array_diff with ready ships
-         */
-        if (array_sum($chunk) === 0) {
-            foreach ($affected as $v) {
-                static::$fleet[$letterRandom][$v] = 1;
-            }
-        }
+        return $ship;
     }
 
-    /**
-     * @todo config
-     */
     public function makeVertical($length)
     {
-        $chunk = [];
+        $ship = [];
 
         $letters = array_keys(static::$table);
 
-        $firstLetterIndex  = rand(0, $this->config['side_length'] -1 - $length - 1);
+        $firstLetterIndex  = rand(0, $this->config['side_length'] - 1 - $length - 1);
         $randRowPoint      = rand(1, $this->config['side_length']);
         $lastLetterInRange = $firstLetterIndex + $length - 1;
 
-        /*
-         * it is very important to check whlole chunk values simultaneously it could be array_slice
+        /**
+         * @todo check is available!!!!
          */
         for ($i = $firstLetterIndex; $i <= $lastLetterInRange; $i++) {
-            $chunk[$letters[$i]][$randRowPoint] = static::$table[$letters[$i]][$randRowPoint];
+            $ship[$letters[$i].$randRowPoint] = 1;
         }
 
-        if (array_sum($chunk) === 0) {
-            foreach ($chunk as $k => $v) {
-                static::$fleet[$k][key($v)] = 1;
-            }
-        }
+        return $ship;
     }
 
     public function finishInitalization()

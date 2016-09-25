@@ -1,5 +1,4 @@
 <?php
-
 fwrite(STDOUT, " ");
 for ($x = 1; $x <= count(array_keys($table)); $x++) {
     fwrite(STDOUT, "  $x");
@@ -11,22 +10,25 @@ foreach ($table as $k => $v) {
     fwrite(STDOUT, "$k ");
 
     for ($x = 1; $x <= count(array_keys($table)); $x++) {
-        if ($filled && is_array($filled) && array_key_exists($k, $filled) && array_key_exists($x, $filled[$k])) {
-            if ($filled[$k][$x] == 0) {
+
+        /**
+         * @note: in table will be better formatting, but missing from requirements
+         *        10 is not hardcoded, 10 is first number with strlen === 3
+         */
+        if ($x > 10) {
+            fwrite(STDOUT, " ");
+        }
+
+        if ($filled && is_array($filled) && array_key_exists($k.$x, $filled)) {
+            if ($filled[$k.$x] == 0) {
                 fwrite(STDOUT, " _ ");
             } else {
                 fwrite(STDOUT, " X ");
             }
         } else {
-            fwrite(STDOUT, " . ");
+            fwrite(STDOUT, " $closed ");
         }
     }
     fwrite(STDOUT, "\n");
 }
-fwrite(
-    STDOUT,
-    "\n--------------------------------------------------------------------------\n"
-    ."Enter coordinates (row, col), e.g. A5 and press return | Enter 'quit' to quit\n"
-    ."--------------------------------------------------------------------------\n"
-    ."\n"
-);
+fwrite(STDOUT, $bottomBar);

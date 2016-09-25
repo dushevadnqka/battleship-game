@@ -7,44 +7,36 @@ use App\Repositories\Console\ConsoleCacheRepository as Cache;
 
 class ConsoleController
 {
+    protected $model;
+
+    public function __construct()
+    {
+        $repository = new Cache();
+        $this->model = new Play($repository);
+    }
 
     public function process($param)
     {
-        $endingMessage = null;
-
-        $repository = new Cache();
-        $model = new Play($repository);
+        $message = "Error";
+        $data = [];
 
         if ($param === 'show') {
-            return [
-                'message' => 'Show',
-                'result' => $model->getFleet()
-            ];
-        } elseif ($model->validation($param) == false) {
-            return ['message' => 'error'];
-        }
 
-        $count = $model->getCountShoots();
+            foreach ($this->model->getFleet() as $v) {
+                $data = array_merge($data, $v);
+            }
 
-        $result = $model->strike(ucfirst($param));
+            $message = "Show";
+        } elseif ($this->model->validation($param) === true) {
+            $result = $this->model->strike(ucfirst($param));
 
-        $message = 'Miss';
-
-        if (strlen($param) === 2 && $result[ucfirst($param)[0]][$param[1]] == 1) {
-            $message = 'Hit';
-        } elseif (strlen($param) === 3 && $result[ucfirst($param)[0]][$param[1].$param[2]]
-            == 1) {
-            $message = 'Hit';
-        }
-
-        if($model->checkGameStatus($result) === true){
-            $endingMessage = "You finished the game with <b>$count</b> shoots.";
+            $data = $result['data'];
+            $message = $result['status'];
         }
 
         return [
-            'message' => $message,
-            'result' => $result,
-            'endingMessage' => $endingMessage
+            'data' => $data,
+            'message' => $message
         ];
     }
 }

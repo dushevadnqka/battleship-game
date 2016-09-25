@@ -12,41 +12,15 @@ class WebCacheRepository implements Cache
         if (!is_null($param) && is_array($param)) {
             $_SESSION = $param;
         }
-        /**
-         * @todo the exception!!!
-         */
-        //throw new \Exception("The input data with key: (".key($param).") is not in correct format or missing.The Repository can not Create the entity.");
     }
 
     /**
-     * @todo not finished..
-     * @param array $param
-     * @throws \Exception
+     *
+     * @todo check is need 
      */
-    public function update(array $param)
-    {
-        if (!is_null($param) && is_array($param) && array_key_exists(
-            key($param),
-            $_SESSION
-        )) {
-            $_SESSION[key($param)] = $param[key($param)];
-        }
-        throw new \Exception("The input data with key: (".key($param).") is not in correct format or missing.The Repository can not Update the entity.");
-    }
-
     public function invalidate($param)
     {
         unset($_SESSION[$param]);
-    }
-
-    /**
-     * fetch the result for all
-     * $_SESSION dump purpose
-     * @return array
-     */
-    public function all()
-    {
-        return $_SESSION;
     }
 
     /**
@@ -61,13 +35,36 @@ class WebCacheRepository implements Cache
         return null;
     }
 
-    public function register($open)
+    public function hitting($ship, $part)
+    {
+        if (array_key_exists($part, $this->find('fleet')[$ship])) {
+            unset($_SESSION['fleet'][$ship][$part]);
+
+            $status = 'Hit';
+
+            if (empty($_SESSION['fleet'][$ship])) {
+                unset($_SESSION['fleet'][$ship]);
+
+                $status = 'Sunk';
+            }
+
+            if (empty($_SESSION['fleet'])) {
+
+                $status = 'End';
+            }
+
+            return $status;
+        }
+    }
+
+    public function register(array $open)
     {
         if (array_key_exists('open', $_SESSION)) {
+
             $old = $_SESSION['open'];
 
             if (in_array(key($open), array_keys($old))) {
-                $new = array_replace_recursive($old, $open);
+                $new = $old;
             } else {
                 $new = array_merge($old, $open);
             }
@@ -84,6 +81,6 @@ class WebCacheRepository implements Cache
 
     public function counter()
     {
-        return $_SESSION['shoots']++;
+        return count($_SESSION['open']);
     }
 }

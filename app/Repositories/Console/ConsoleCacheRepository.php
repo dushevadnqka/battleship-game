@@ -18,41 +18,11 @@ class ConsoleCacheRepository implements Cache
         if (!is_null($param) && is_array($param)) {
             static::$storage = $param;
         }
-        /**
-         * @todo the exception!!!
-         */
-        //throw new \Exception("The input data with key: (".key($param).") is not in correct format or missing.The Repository can not Create the entity.");
-    }
-
-    /**
-     * @todo not finished..
-     * @param array $param
-     * @throws \Exception
-     */
-    public function update(array $param)
-    {
-        if (!is_null($param) && is_array($param) && array_key_exists(
-            key($param),
-            static::$storage
-        )) {
-            static::$storage[key($param)] = $param[key($param)];
-        }
-        throw new \Exception("The input data with key: (".key($param).") is not in correct format or missing.The Repository can not Update the entity.");
     }
 
     public function invalidate($param)
     {
         unset(static::$storage[$param]);
-    }
-
-    /**
-     * fetch the result for all
-     * static::$storage dump purpose
-     * @return array
-     */
-    public function all()
-    {
-        return static::$storage;
     }
 
     /**
@@ -67,13 +37,35 @@ class ConsoleCacheRepository implements Cache
         return null;
     }
 
-    public function register($open)
+    public function hitting($ship, $part)
+    {
+        if (array_key_exists($part, $this->find('fleet')[$ship])) {
+            unset(static::$storage['fleet'][$ship][$part]);
+
+            $status = 'Hit';
+
+            if (empty(static::$storage['fleet'][$ship])) {
+                unset(static::$storage['fleet'][$ship]);
+
+                $status = 'Sunk';
+            }
+
+            if (empty(static::$storage['fleet'])) {
+
+                $status = 'End';
+            }
+
+            return $status;
+        }
+    }
+
+    public function register(array $open)
     {
         if (array_key_exists('open', static::$storage)) {
             $old = static::$storage['open'];
 
             if (in_array(key($open), array_keys($old))) {
-                $new = array_replace_recursive($old, $open);
+                $new = $old;
             } else {
                 $new = array_merge($old, $open);
             }
@@ -86,10 +78,5 @@ class ConsoleCacheRepository implements Cache
         static::$storage['open'] = $new;
 
         return $new;
-    }
-
-    public function counter()
-    {
-        return static::$shoots ++;
     }
 }

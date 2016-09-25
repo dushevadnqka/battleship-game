@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Repositories\CacheRepositoryInterface as Cache;
+use App\Repositories\CacheRepositoryInterface as Repository;
 
 class Play
 {
     protected $repository;
 
-    public function __construct(Cache $repository)
+    public function __construct(Repository $repository)
     {
         $this->repository = $repository;
     }
@@ -25,30 +25,16 @@ class Play
 
     public function validation($param)
     {
+        if(empty($param)){
+            return false;
+        }
+
         $input = preg_replace("/[^a-zA-Z0-9]+/", "", trim($param));
 
         $input = ucfirst($input);
 
-        /*
-         * the number "10" case (3 chars)
-         */
-        if (strlen($input) === 3 && array_key_exists(
-            $input[0],
-            $this->getTable()
-        ) && array_key_exists(
-            $input[1].$input[2],
-            $this->getTable()[$input[0]]
-        )) {
-            return true;
-        }
-
-        if (strlen($input) === 2 && array_key_exists(
-            $input[0],
-            $this->getTable()
-        ) && array_key_exists(
-            $input[1],
-            $this->getTable()[$input[0]]
-        )) {
+        if (array_key_exists($input[0], $this->getTable()) && array_key_exists($input,
+                $this->getTable()[$input[0]])) {
             return true;
         }
 
@@ -57,52 +43,22 @@ class Play
 
     public function strike($param)
     {
-        $open = [];
+        $status = "Miss";
 
-        if (strlen($param) === 2) {
-            $open[$param[0]][$param[1]] = 0;
+        $open[$param] = 0;
+        
+        foreach ($this->getFleet() as $k => $v) {
 
-            if (isset($this->getFleet()[$param[0]][$param[1]])) {
-                $open[$param[0]][$param[1]] = 1;
-            }
-        } elseif (strlen($param) === 3) {
-            $open[$param[0]][$param[1].$param[2]] = 0;
-
-            if (isset($this->getFleet()[$param[0]][$param[1].$param[2]])) {
-                $open[$param[0]][$param[1].$param[2]] = 1;
+            if (array_intersect_key($open, $v)) {
+                $open[$param] = 1;
+                $status = $this->repository->hitting($k, $param);
             }
         }
 
-        $result = $this->registerShoot($open);
-
-        return $result;
-    }
-
-    public function registerShoot($open)
-    {
-        return $this->repository->register($open);
-    }
-
-    public function checkGameStatus($open)
-    {
-        $check = array_intersect_key($open, $this->getFleet());
-//return $check;
-
-        //$diff = array_diff($this->getFleet(), $open);
-
-       return $open;
-
-        /**
-         * @todo config
-         */
-        /*
-        if (count($check) === 3 && count($check) === count($this->getFleet())) {
-            return true;
-        }
-
-        return false;
-         * 
-         */
+        return [
+            'data' => $this->repository->register($open),
+            'status' => $status
+        ];
     }
 
     public function getCountShoots()
