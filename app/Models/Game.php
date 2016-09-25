@@ -59,17 +59,19 @@ class Game
         for ($i = 1; $i <= $numberOfShips; $i++) {
             if ($i == 2) {
                 static::$fleet[$i] = $this->createShip($battleShipLength);
-            } else {
+            }else{
                 static::$fleet[$i] = $this->createShip($destroyerLength);
             }
         }
+
+        $this->checkFleetOverlapping();
     }
 
     /**
      * 1 horizontal [A[1], A[2], A[3], A[4]]
      * 2 vertical A[1], B[1], C[1], D[1]
      */
-    public function createShip($length)
+    protected function createShip($length)
     {
         $choice = rand(1, 2);
 
@@ -80,7 +82,7 @@ class Game
         }
     }
 
-    public function makeHorizontal($length)
+    protected function makeHorizontal($length)
     {
         $ship = [];
 
@@ -90,9 +92,6 @@ class Game
         $firstRandom = rand(1, $this->config['side_length'] - $length - 1);
         $lastInRange = $firstRandom + $length - 1;
 
-        /**
-         * @todo check is available!!!!
-         */
         for ($i = $firstRandom; $i <= $lastInRange; $i++) {
             $ship[$letterRandom.$i] = 1;
         }
@@ -100,24 +99,36 @@ class Game
         return $ship;
     }
 
-    public function makeVertical($length)
+    protected function makeVertical($length)
     {
         $ship = [];
 
         $letters = array_keys(static::$table);
 
-        $firstLetterIndex  = rand(0, $this->config['side_length'] - 1 - $length - 1);
+        $firstLetterIndex  = rand(0,
+            $this->config['side_length'] - 1 - $length - 1);
         $randRowPoint      = rand(1, $this->config['side_length']);
         $lastLetterInRange = $firstLetterIndex + $length - 1;
 
-        /**
-         * @todo check is available!!!!
-         */
         for ($i = $firstLetterIndex; $i <= $lastLetterInRange; $i++) {
             $ship[$letters[$i].$randRowPoint] = 1;
         }
 
         return $ship;
+    }
+
+    protected function checkFleetOverlapping()
+    {
+        $data = [];
+        foreach (static::$fleet as $v) {
+            $data = array_merge($data, $v);
+        }
+
+        $allPartCount = $this->config['destroyer_length'] + $this->config['destroyer_length'] + $this->config['battleship_length'];
+
+        if($allPartCount !== count($data)){
+            $this->createFleet();
+        }
     }
 
     public function finishInitalization()

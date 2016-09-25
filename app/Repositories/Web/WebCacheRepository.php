@@ -23,7 +23,6 @@ class WebCacheRepository implements Cache
         if (array_key_exists($param, $_SESSION)) {
             return $_SESSION[$param];
         }
-        return null;
     }
 
     public function hitting($ship, $part)

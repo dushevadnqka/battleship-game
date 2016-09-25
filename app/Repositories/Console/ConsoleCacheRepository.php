@@ -26,7 +26,7 @@ class ConsoleCacheRepository implements Cache
      */
     public function find($param)
     {
-        if (array_key_exists($param, static::$storage)) {
+        if (isset(static::$storage) && array_key_exists($param, static::$storage)) {
             return static::$storage[$param];
         }
         return null;

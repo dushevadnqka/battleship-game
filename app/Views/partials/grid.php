@@ -21,7 +21,7 @@ foreach ($table as $k => $v) {
 
         if ($filled && is_array($filled) && array_key_exists($k.$x, $filled)) {
             if ($filled[$k.$x] == 0) {
-                fwrite(STDOUT, " _ ");
+                fwrite(STDOUT, " - ");
             } else {
                 fwrite(STDOUT, " X ");
             }
