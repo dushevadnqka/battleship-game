@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Play;
-use App\Repositories\Console\ConsoleCacheRepository as Cache;
+use App\Repositories\Console\ConsoleCacheRepository as Repository;
 
 class ConsoleController
 {
@@ -11,7 +11,7 @@ class ConsoleController
 
     public function __construct()
     {
-        $repository = new Cache();
+        $repository = new Repository();
         $this->model = new Play($repository);
     }
 

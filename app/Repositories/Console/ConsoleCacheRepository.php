@@ -20,14 +20,9 @@ class ConsoleCacheRepository implements Cache
         }
     }
 
-    public function invalidate($param)
-    {
-        unset(static::$storage[$param]);
-    }
-
     /**
      * fetch the result for certain item
-     * @return ConsoleCacheRepository one
+     * @return ConsoleCacheRepository
      */
     public function find($param)
     {

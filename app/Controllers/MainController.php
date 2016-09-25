@@ -52,9 +52,6 @@ class MainController
 
                 $result = $this->model->strike($input);
 
-                /**
-                 * after status "End".. game over
-                 */
                 if ($result['status'] === "End") {
                     $location = "ending";
                 }

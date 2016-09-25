@@ -15,17 +15,8 @@ class WebCacheRepository implements Cache
     }
 
     /**
-     *
-     * @todo check is need 
-     */
-    public function invalidate($param)
-    {
-        unset($_SESSION[$param]);
-    }
-
-    /**
      * fetch the result for certain item
-     * @return WebCacheRepository one
+     * @return WebCacheRepository
      */
     public function find($param)
     {
