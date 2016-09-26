@@ -2,7 +2,7 @@
 fwrite(STDOUT, "\n");
 
 $filled    = '';
-$closed    = ".";
+$closed    = '.';
 $status    = '';
 $bottomBar = "\n--------------------------------------------------------------------------\n"
     ."Enter coordinates (row, col), e.g. A5 and press return | Enter 'quit' to quit\n"
@@ -24,16 +24,16 @@ do {
 
         $status = "\n*** ".$triger['message']." ***\n";
 
-        if ($triger['message'] === "Show") {
+        if ($triger['message'] === 'Show') {
             $status = '';
             $closed = ' ';
-        } elseif ($triger['message'] === "End") {
+        } elseif ($triger['message'] === 'End') {
             $count     = count($triger['data']);
             $bottomBar = "\nWell done! You completed the game in $count shots.\nTo play a new game, please type in your cli 'php public/index.php' and hit return!\n\n";
             require 'partials/grid.php';
             exit(0);
         }else{
-           $closed    = ".";
+           $closed    = '.';
         }
 
         fwrite(STDOUT, $status);

@@ -22,7 +22,7 @@ class Config
             $this->configArray  = [];
             $this->configFolder = $configFolder.DIRECTORY_SEPARATOR;
         } else {
-            throw new \Exception("Config directory read error: ".$configFolderParam);
+            throw new \Exception("Config directory read error: $configFolderParam");
         }
     }
 
@@ -33,20 +33,20 @@ class Config
         }
         $file = realpath($path);
         if ($file != false && is_file($file) && is_readable($file)) {
-            $basename                     = explode('.php', basename($file))[0];
+            $basename                     = explode(".php", basename($file))[0];
             $this->configArray[$basename] = include $file;
         } else {
             /**
              * @todo
              */
-            throw new \Exception("Config file read error: ".$path);
+            throw new \Exception("Config file read error: $path");
         }
     }
 
     public function __get($name)
     {
         if (!isset($this->configArray[$name])) {
-            $this->includeConfigFile($this->configFolder.$name.'.php');
+            $this->includeConfigFile($this->configFolder.$name.".php");
         }
         if (array_key_exists($name, $this->configArray)) {
             return $this->configArray[$name];

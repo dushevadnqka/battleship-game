@@ -17,7 +17,7 @@ class ConsoleController
 
     public function process($param)
     {
-        $message = "Error";
+        $message = 'Error';
         $data = [];
 
         if ($param === 'show') {
@@ -26,7 +26,7 @@ class ConsoleController
                 $data = array_merge($data, $v);
             }
 
-            $message = "Show";
+            $message = 'Show';
         } elseif ($this->model->validation($param) === true) {
             $result = $this->model->strike(ucfirst($param));
 

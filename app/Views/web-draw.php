@@ -4,7 +4,7 @@
         <?php
 
         $filled = '';
-        $closed = ".";
+        $closed = '.';
         $status = '';
 
         if (array_key_exists('result', $_SESSION)) {
@@ -16,7 +16,7 @@
         if (array_key_exists('flash_message', $_SESSION)) {
             $status = "*** ".$_SESSION['flash_message']." ***\n\n";
 
-            if($_SESSION['flash_message'] === "Show"){
+            if($_SESSION['flash_message'] === 'Show'){
                $status = '';
                $closed = ' ';
             }
@@ -57,15 +57,11 @@
             }
             echo PHP_EOL;
         }
-        echo '</pre>';
-
-        if (array_key_exists('ending_message', $_SESSION)) {
-            echo $_SESSION['ending_message'];
-        }
+        echo "</pre>";
         ?>
 
         <form method="POST" action="main/shoot">
-            <p>Enter coordinates (row, col), e.g. A5 <input type='text' name='coordinates' size='5' autocomplete='off'> <input type='submit' value='Submit Query'></p>
+            <p>Enter coordinates (row, col), e.g. A5 <input type="text" name="coordinates" size="5" autocomplete="off"> <input type="submit" value="Submit Query"></p>
         </form>
 
     </body>

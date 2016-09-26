@@ -18,14 +18,14 @@ final class WebFrontController
 
     public function dispatch()
     {
-        $path = trim(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH), "/");
-        $path = preg_replace('[^a-zA-Z0-9]', "", $path);
+        $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+        $path = preg_replace('[^a-zA-Z0-9]', '', $path);
 
         if (strpos($path, $this->basePath) === 0) {
             $path = substr($path, strlen($this->basePath));
         }
 
-        $segments = explode("/", $path, 3);
+        $segments = explode('/', $path, 3);
 
         if (array_key_exists(0, $segments) && !empty($segments[0])) {
             /*
@@ -46,7 +46,7 @@ final class WebFrontController
             /*
              * params
              */
-            $this->setParams(explode("/", $segments[2]));
+            $this->setParams(explode('/', $segments[2]));
         }
     }
 
@@ -58,7 +58,7 @@ final class WebFrontController
      */
     public function setController($controller)
     {
-        $controller = ucfirst(strtolower($controller))."Controller";
+        $controller = ucfirst(strtolower($controller)).'Controller';
 
         $controller = 'App\\Controllers\\'.$controller;
 
