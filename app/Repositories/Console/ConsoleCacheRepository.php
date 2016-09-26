@@ -21,6 +21,24 @@ class ConsoleCacheRepository implements Cache
     }
 
     /**
+     * remove storage resources
+     * @param type $key
+     * @param type $subKey
+     * @param type $param
+     */
+    public function invalidation($key, $subKey = null, $param = null)
+    {
+        if (isset($subKey) && isset($param) && array_key_exists($param,
+                static::$storage[$key][$subKey])) {
+            unset(static::$storage[$key][$subKey][$param]);
+        } elseif (isset($subKey)) {
+            unset(static::$storage[$key][$subKey]);
+        } else {
+            unset(static::$storage[$key]);
+        }
+    }
+
+    /**
      * fetch the result for certain item
      * @return ConsoleCacheRepository
      */
@@ -30,28 +48,6 @@ class ConsoleCacheRepository implements Cache
             return static::$storage[$param];
         }
         return null;
-    }
-
-    public function hitting($ship, $part)
-    {
-        if (array_key_exists($part, $this->find('fleet')[$ship])) {
-            unset(static::$storage['fleet'][$ship][$part]);
-
-            $status = 'Hit';
-
-            if (empty(static::$storage['fleet'][$ship])) {
-                unset(static::$storage['fleet'][$ship]);
-
-                $status = 'Sunk';
-            }
-
-            if (empty(static::$storage['fleet'])) {
-
-                $status = 'End';
-            }
-
-            return $status;
-        }
     }
 
     public function register(array $open)
@@ -65,7 +61,7 @@ class ConsoleCacheRepository implements Cache
                 $new = array_merge($old, $open);
             }
 
-            unset(static::$storage['open']);
+            $this->invalidation('open');
         } else {
             $new = $open;
         }
