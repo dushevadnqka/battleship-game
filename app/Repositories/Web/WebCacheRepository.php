@@ -15,6 +15,24 @@ class WebCacheRepository implements Cache
     }
 
     /**
+     * remove storage resources
+     * @param type $key
+     * @param type $subKey
+     * @param type $param
+     */
+    public function invalidation($key, $subKey = null, $param = null)
+    {
+        if (isset($subKey) && isset($param) && array_key_exists($param,
+                $_SESSION[$key][$subKey])) {
+            unset($_SESSION[$key][$subKey][$param]);
+        } elseif (isset($subKey)) {
+            unset($_SESSION[$key][$subKey]);
+        } else {
+            unset($_SESSION[$key]);
+        }
+    }
+
+    /**
      * fetch the result for certain item
      * @return WebCacheRepository
      */
@@ -22,28 +40,6 @@ class WebCacheRepository implements Cache
     {
         if (array_key_exists($param, $_SESSION)) {
             return $_SESSION[$param];
-        }
-    }
-
-    public function hitting($ship, $part)
-    {
-        if (array_key_exists($part, $this->find('fleet')[$ship])) {
-            unset($_SESSION['fleet'][$ship][$part]);
-
-            $status = 'Hit';
-
-            if (empty($_SESSION['fleet'][$ship])) {
-                unset($_SESSION['fleet'][$ship]);
-
-                $status = 'Sunk';
-            }
-
-            if (empty($_SESSION['fleet'])) {
-
-                $status = 'End';
-            }
-
-            return $status;
         }
     }
 
@@ -59,7 +55,7 @@ class WebCacheRepository implements Cache
                 $new = array_merge($old, $open);
             }
 
-            unset($_SESSION['open']);
+            $this->invalidation('open');
         } else {
             $new = $open;
         }

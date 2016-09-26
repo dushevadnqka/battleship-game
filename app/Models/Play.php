@@ -25,7 +25,7 @@ class Play
 
     public function validation($param)
     {
-        if(empty($param)){
+        if (empty($param)) {
             return false;
         }
 
@@ -43,15 +43,36 @@ class Play
 
     public function strike($param)
     {
-        $status = 'Miss';
+        $status         = 'Miss';
+        $storageSegment = 'fleet';
 
         $open[$param] = 0;
-        
-        foreach ($this->getFleet() as $k => $v) {
+
+        foreach ($this->getFleet() as $ship => $v) {
 
             if (array_intersect_key($open, $v)) {
+
                 $open[$param] = 1;
-                $status = $this->repository->hitting($k, $param);
+
+                if (array_key_exists($param, $this->getFleet()[$ship])) {
+
+                    $this->repository->invalidation($storageSegment, $ship,
+                        $param);
+
+                    $status = 'Hit';
+
+                    if (empty($this->getFleet()[$ship])) {
+
+                        $this->repository->invalidation($storageSegment, $ship);
+
+                        $status = 'Sunk';
+                    }
+
+                    if (empty($this->getFleet())) {
+
+                        $status = 'End';
+                    }
+                }
             }
         }
 

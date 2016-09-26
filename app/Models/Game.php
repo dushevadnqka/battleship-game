@@ -87,8 +87,6 @@ class Game
         $ship = [];
 
         $letterRandom = array_rand(static::$table, 1);
-        $row          = static::$table[$letterRandom];
-
         $firstRandom = rand(1, $this->config['side_length'] - $length - 1);
         $lastInRange = $firstRandom + $length - 1;
 
@@ -106,7 +104,7 @@ class Game
         $letters = array_keys(static::$table);
 
         $firstLetterIndex  = rand(0,
-            $this->config['side_length'] - 1 - $length - 1);
+        $this->config['side_length'] - 1 - $length - 1);
         $randRowPoint      = rand(1, $this->config['side_length']);
         $lastLetterInRange = $firstLetterIndex + $length - 1;
 
