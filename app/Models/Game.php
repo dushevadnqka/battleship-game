@@ -136,9 +136,4 @@ class Game
             $this->repository->create(['table' => static::$table, 'fleet' => static::$fleet]);
         }
     }
-
-    public function getTable()
-    {
-        return $this->repository->find('table');
-    }
 }

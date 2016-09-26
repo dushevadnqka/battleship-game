@@ -64,9 +64,4 @@ class WebCacheRepository implements Cache
 
         return $new;
     }
-
-    public function counter()
-    {
-        return count($_SESSION['open']);
-    }
 }

@@ -84,6 +84,6 @@ class Play
 
     public function getCountShoots()
     {
-        return $this->repository->counter();
+        return count($this->repository->find('open'));
     }
 }
