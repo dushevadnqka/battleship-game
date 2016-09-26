@@ -41,7 +41,7 @@ class MainController
 
             if ($input == 'Show') {
 
-                $flash_message = "Show";
+                $flash_message = 'Show';
 
                 $result['data'] = [];
 
@@ -52,8 +52,8 @@ class MainController
 
                 $result = $this->model->strike($input);
 
-                if ($result['status'] === "End") {
-                    $location = "ending";
+                if ($result['status'] === 'End') {
+                    $location = 'ending';
                 }
 
                 $flash_message = $result['status'];
@@ -85,7 +85,7 @@ class MainController
             $uri = (explode('/',
                     str_replace('http://', '', $_SERVER['HTTP_REFERER'])));
 
-            if (end($uri) === "ending") {
+            if (end($uri) === 'ending') {
                 session_destroy();
             }
         }

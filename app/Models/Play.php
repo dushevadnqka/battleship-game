@@ -29,7 +29,7 @@ class Play
             return false;
         }
 
-        $input = preg_replace("/[^a-zA-Z0-9]+/", "", trim($param));
+        $input = preg_replace('/[^a-zA-Z0-9]+/', '', trim($param));
 
         $input = ucfirst($input);
 
@@ -43,7 +43,7 @@ class Play
 
     public function strike($param)
     {
-        $status = "Miss";
+        $status = 'Miss';
 
         $open[$param] = 0;
         

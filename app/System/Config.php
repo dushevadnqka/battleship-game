@@ -33,10 +33,12 @@ class Config
         }
         $file = realpath($path);
         if ($file != false && is_file($file) && is_readable($file)) {
-            $_basename                     = explode('.php', basename($file))[0];
-            $this->configArray[$_basename] = include $file;
+            $basename                     = explode('.php', basename($file))[0];
+            $this->configArray[$basename] = include $file;
         } else {
-            //@TODO
+            /**
+             * @todo
+             */
             throw new \Exception("Config file read error: ".$path);
         }
     }
